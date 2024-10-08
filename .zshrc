@@ -35,6 +35,9 @@ antigen bundle pip
 antigen bundle command-not-found
 antigen bundle docker
 antigen bundle kubectl
+antigen bundle git-extras
+antigen bundle direnv
+antigen bundle git-auto-fetch
 
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -70,3 +73,6 @@ export NVM_DIR="$HOME/.nvm"
 unsetopt XTRACE
 exec 2>&3 3>&-
 function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
+[ -f ~/.aws_profiles.sh ] && source ~/.aws_profiles.sh && chpwd_functions+=(aws_profiles)
+[ -f ~/.aws_regions.sh ] && source ~/.aws_regions.sh && chpwd_functions+=(aws_regions)
+[ -f ~/.aws_functions.sh ] && source ~/.aws_functions.sh && chpwd_functions+=(aws_functions)
