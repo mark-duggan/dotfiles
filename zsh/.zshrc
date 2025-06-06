@@ -139,4 +139,4 @@ function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
+[ -f ~/.aws_functions.sh ] && source ~/.aws_functions.sh && chpwd_functions+=(aws_functions)
