@@ -123,6 +123,7 @@ plugins=(
     git
     git-extras
     git-auto-fetch
+    python
     pip
     fzf
     command-not-found
@@ -131,6 +132,8 @@ plugins=(
     direnv
     dotenv
     ssh-agent
+    virtualenv
+    virtualenvwrapper
     zsh-autosuggestions
     zsh-completions
     zsh-syntax-highlighting
