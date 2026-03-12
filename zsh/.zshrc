@@ -44,11 +44,6 @@ then
 	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 2>/dev/null
 fi
 
-# ssh-agent settings
-zstyle :omz:plugins:ssh-agent agent-forwarding yes
-zstyle :omz:plugins:ssh-agent quiet yes
-zstyle :omz:plugins:ssh-agent lazy yes
-
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -117,8 +112,6 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-autoload -U compinit && compinit
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
@@ -129,21 +122,29 @@ plugins=(
     fzf
     command-not-found
     aws
+    azure-cli
     docker
     direnv
     dotenv
     mise
     ssh-agent
-    virtualenv
-    virtualenvwrapper
     zsh-autosuggestions
-    zsh-completions
     zsh-syntax-highlighting
+    kubectl-autocomplete
 )
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+autoload -U compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # User configuration
+
+# ssh-agent settings
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+zstyle :omz:plugins:ssh-agent quiet yes
+zstyle :omz:plugins:ssh-agent lazy yes
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -178,7 +179,9 @@ export AWS_PAGER=""
 eval "$(mise activate zsh)"
 function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 [ -f ~/.aws_functions.sh ] && source ~/.aws_functions.sh && chpwd_functions+=(aws_functions)
 
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
