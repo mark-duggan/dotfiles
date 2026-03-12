@@ -182,3 +182,15 @@ function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 [ -f ~/.aws_functions.sh ] && source ~/.aws_functions.sh && chpwd_functions+=(aws_functions)
 
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
+
+# pnpm
+export PNPM_HOME="/home/markduggan/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
