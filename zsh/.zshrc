@@ -19,6 +19,11 @@ then
 	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh 2>/dev/null
 fi
 
+if [ ! -d ~/.ssh ]
+then
+	mkdir -p ~/.ssh
+fi
+
 if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]
 then
 	echo "zsh-syntax-autosuggestions is not installed. Installing..."
@@ -37,6 +42,13 @@ then
 	git clone https://github.com/zsh-users/zsh-completions.git  ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions 2>/dev/null
 fi
 
+if [ ! -f ~/.local/bin/mise ]
+then
+	echo "mise is not installed. Installing..."
+	curl -s https://mise.run | sh
+fi
+
+~/.local/bin/mise use --global atuin > /dev/null 2>&1
 
 if [ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k ]
 then
@@ -125,13 +137,11 @@ plugins=(
     pip
     command-not-found
     aws
-    azure-cli
     docker
     mise
     ssh-agent
     zsh-autosuggestions
     zsh-syntax-highlighting
-    kubectl-autocomplete
 )
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 autoload -U compinit && compinit
