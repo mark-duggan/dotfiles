@@ -47,7 +47,6 @@ fi
 # ssh-agent settings
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 zstyle :omz:plugins:ssh-agent quiet yes
-zstyle :omz:plugins:ssh-agent lazy yes
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -126,16 +125,11 @@ plugins=(
     git-auto-fetch
     python
     pip
-    fzf
     command-not-found
     aws
     docker
-    direnv
-    dotenv
     mise
     ssh-agent
-    virtualenv
-    virtualenvwrapper
     zsh-autosuggestions
     zsh-completions
     zsh-syntax-highlighting
@@ -181,9 +175,6 @@ function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 [ -f ~/.aws_functions.sh ] && source ~/.aws_functions.sh && chpwd_functions+=(aws_functions)
-
-
-. "$HOME/.atuin/bin/env"
 
 eval "$(atuin init zsh)"
 
