@@ -4,7 +4,9 @@
 
 ### Install required OS packages
 
-    sudo apt install zsh stow fzf direnv
+    sudo apt-get update
+    sudo apt-get install vim stow zsh curl wget zip unzip
+    sudo apt-get install git
 
 ### Link .zshrc from repo
 
