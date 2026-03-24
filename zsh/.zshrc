@@ -44,6 +44,10 @@ then
 	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 2>/dev/null
 fi
 
+# ssh-agent settings
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+zstyle :omz:plugins:ssh-agent quiet yes
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -119,13 +123,10 @@ plugins=(
     git-auto-fetch
     python
     pip
-    fzf
     command-not-found
     aws
     azure-cli
     docker
-    direnv
-    dotenv
     mise
     ssh-agent
     zsh-autosuggestions
@@ -181,7 +182,12 @@ function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$
 
 [ -f ~/.aws_functions.sh ] && source ~/.aws_functions.sh && chpwd_functions+=(aws_functions)
 
-
-. "$HOME/.atuin/bin/env"
-
 eval "$(atuin init zsh)"
+
+# pnpm
+export PNPM_HOME="/home/markduggan/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
