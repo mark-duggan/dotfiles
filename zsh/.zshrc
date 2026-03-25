@@ -9,56 +9,71 @@ fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# Pinned third-party revisions (bump when you want newer upstream code).
+DOTFILES_OMZ_SHA=9151236d1e0cb64b2e803d7ec1736c7a717efc33
+DOTFILES_MISE_VERSION=v2026.3.15
+DOTFILES_P10K_TAG=v1.20.0
+DOTFILES_ZSH_AUTOSUGGESTIONS_TAG=v0.7.1
+DOTFILES_ZSH_SYNTAX_HIGHLIGHTING_TAG=0.8.0
+DOTFILES_ZSH_COMPLETIONS_TAG=0.36.0
+
+_ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
 # install oh-my-zsh, plugins and themes if not present
-#
-#
-
-if [ ! -d ~/.oh-my-zsh ]
-then
-	echo "oh-my-zsh not installed. Installing..."
-	git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh 2>/dev/null
+if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
+	echo "oh-my-zsh not installed. Installing pinned revision..."
+	if [ ! -d "$HOME/.oh-my-zsh/.git" ]; then
+		mkdir -p "$HOME/.oh-my-zsh"
+		git init -q "$HOME/.oh-my-zsh"
+		git -C "$HOME/.oh-my-zsh" remote add origin https://github.com/ohmyzsh/ohmyzsh.git
+	fi
+	git -C "$HOME/.oh-my-zsh" fetch --depth 1 origin "$DOTFILES_OMZ_SHA"
+	git -C "$HOME/.oh-my-zsh" checkout -q FETCH_HEAD
 fi
 
-if [ ! -d ~/.ssh ]
-then
-	mkdir -p ~/.ssh
+if [ ! -d "$HOME/.ssh" ]; then
+	mkdir -p "$HOME/.ssh"
+	chmod 700 "$HOME/.ssh"
 fi
 
-if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]
-then
-	echo "zsh-syntax-autosuggestions is not installed. Installing..."
-	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null
+if [ ! -d "$_ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
+	echo "zsh-autosuggestions is not installed. Installing..."
+	git clone --depth 1 --branch "$DOTFILES_ZSH_AUTOSUGGESTIONS_TAG" \
+		https://github.com/zsh-users/zsh-autosuggestions.git \
+		"$_ZSH_CUSTOM/plugins/zsh-autosuggestions"
 fi
 
-if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]
-then
+if [ ! -d "$_ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
 	echo "zsh-syntax-highlighting is not installed. Installing..."
-	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-syntax-highlighting 2>/dev/null
+	git clone --depth 1 --branch "$DOTFILES_ZSH_SYNTAX_HIGHLIGHTING_TAG" \
+		https://github.com/zsh-users/zsh-syntax-highlighting.git \
+		"$_ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 fi
 
-if [ ! -d ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions ]
-then
+if [ ! -d "$_ZSH_CUSTOM/plugins/zsh-completions" ]; then
 	echo "zsh-completions is not installed. Installing..."
-	git clone https://github.com/zsh-users/zsh-completions.git  ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions 2>/dev/null
+	git clone --depth 1 --branch "$DOTFILES_ZSH_COMPLETIONS_TAG" \
+		https://github.com/zsh-users/zsh-completions.git \
+		"$_ZSH_CUSTOM/plugins/zsh-completions"
 fi
 
-if [ ! -f ~/.local/bin/mise ]
-then
+if [ ! -f "$HOME/.local/bin/mise" ]; then
 	echo "mise is not installed. Installing..."
-	curl -s https://mise.run | sh
+	curl -fsSL https://mise.run | MISE_VERSION="$DOTFILES_MISE_VERSION" sh
 fi
 
-~/.local/bin/mise use --global atuin > /dev/null 2>&1
+"$HOME/.local/bin/mise" use --global atuin > /dev/null 2>&1
 
-if [ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k ]
-then
+if [ ! -d "$_ZSH_CUSTOM/themes/powerlevel10k" ]; then
 	echo "powerlevel10k is not installed. Installing..."
-	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 2>/dev/null
+	git clone --depth 1 --branch "$DOTFILES_P10K_TAG" \
+		https://github.com/romkatv/powerlevel10k.git \
+		"$_ZSH_CUSTOM/themes/powerlevel10k"
 fi
-
-# ssh-agent settings
-zstyle :omz:plugins:ssh-agent agent-forwarding yes
-zstyle :omz:plugins:ssh-agent quiet yes
+unset _ZSH_CUSTOM
+unset DOTFILES_OMZ_SHA DOTFILES_MISE_VERSION DOTFILES_P10K_TAG \
+	DOTFILES_ZSH_AUTOSUGGESTIONS_TAG DOTFILES_ZSH_SYNTAX_HIGHLIGHTING_TAG \
+	DOTFILES_ZSH_COMPLETIONS_TAG
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -185,7 +200,7 @@ zstyle :omz:plugins:ssh-agent lazy yes
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-export PATH=$PATH:~/.local/bin
+export PATH="$PATH:$HOME/.local/bin"
 export AWS_PAGER=""
 eval "$(mise activate zsh)"
 function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$@ ;}
@@ -195,7 +210,7 @@ function gi() { curl -sLw "\n" https://www.toptal.com/developers/gitignore/api/$
 eval "$(atuin init zsh)"
 
 # pnpm
-export PNPM_HOME="/home/markduggan/.local/share/pnpm"
+export PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
