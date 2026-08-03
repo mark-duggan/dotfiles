@@ -10,8 +10,8 @@ fi
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Pinned third-party revisions (bump when you want newer upstream code).
-DOTFILES_OMZ_SHA=9151236d1e0cb64b2e803d7ec1736c7a717efc33
-DOTFILES_MISE_VERSION=v2026.3.15
+DOTFILES_OMZ_SHA=ad586ffecaaeb695cc73ced4d643c6727d47f535
+DOTFILES_MISE_VERSION=v2026.8.0
 DOTFILES_P10K_TAG=v1.20.0
 DOTFILES_ZSH_AUTOSUGGESTIONS_TAG=v0.7.1
 DOTFILES_ZSH_SYNTAX_HIGHLIGHTING_TAG=0.8.0
@@ -55,6 +55,12 @@ if [ ! -d "$_ZSH_CUSTOM/plugins/zsh-completions" ]; then
 	git clone --depth 1 --branch "$DOTFILES_ZSH_COMPLETIONS_TAG" \
 		https://github.com/zsh-users/zsh-completions.git \
 		"$_ZSH_CUSTOM/plugins/zsh-completions"
+fi
+
+if [ ! -d "$_ZSH_CUSTOM/plugins/pnpm-shell-completion" ]; then
+	echo "pnpm-shell-completion is not installed. Installing..."
+	git clone --depth 1 https://github.com/g-plane/pnpm-shell-completion.git \
+	"$_ZSH_CUSTOM/plugins/pnpm-shell-completion"
 fi
 
 if [ ! -f "$HOME/.local/bin/mise" ]; then
@@ -145,14 +151,17 @@ zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+    azure
     git
     git-extras
     git-auto-fetch
     python
+    pnpm-shell-completion
     pip
     command-not-found
     aws
     docker
+    docker-compose
     mise
     ssh-agent
     zsh-autosuggestions
